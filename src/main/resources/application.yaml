@@ -6,3 +6,7 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+application:
+  jwt:
+    secret: ${APPLICATION_JWT_SECRET}
+    expirationInSecond: ${APPLICATION_JWT_EXPIRATION_IN_SECOND}
