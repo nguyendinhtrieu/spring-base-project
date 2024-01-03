@@ -34,3 +34,5 @@ build/
 
 ### Private http-client enviroment file ###
 /http/http-client.private.env.json
+### Generated log files for application ###
+/logs/
