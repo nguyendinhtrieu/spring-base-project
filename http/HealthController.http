@@ -1,0 +1,4 @@
+GET {{host}}/health
+Accept: application/json
+
+###

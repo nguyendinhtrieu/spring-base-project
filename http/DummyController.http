@@ -1,0 +1,16 @@
+### GET /dummy
+GET {{host}}/dummy
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GET /dummy/user
+GET {{host}}/dummy/user
+Authorization: Bearer {{user-jwt-token}}
+Accept: application/json
+
+### GET /dummy/admin
+GET {{host}}/dummy/admin
+Authorization: Bearer {{admin-jwt-token}}
+Accept: application/json
+
+###
