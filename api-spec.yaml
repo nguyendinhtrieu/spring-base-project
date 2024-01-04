@@ -238,7 +238,7 @@ components:
               type: string
               description: A general error message providing a brief description of the encountered issue
               example: 'Error message'
-            messages:
+            details:
               type: object
               description: A object containing detailed error messages, each describing a specific issue encountered
               example: {

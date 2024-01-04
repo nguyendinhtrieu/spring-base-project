@@ -9,6 +9,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
 application:
+  debug: false
   jwt:
     secret: ${APPLICATION_JWT_SECRET}
     expirationInSecond: ${APPLICATION_JWT_EXPIRATION_IN_SECOND}

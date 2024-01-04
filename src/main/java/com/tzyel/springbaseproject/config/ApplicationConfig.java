@@ -18,4 +18,3 @@ public class ApplicationConfig {
         return messageSource;
     }
 }
-
