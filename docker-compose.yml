@@ -1,20 +1,35 @@
 version: '3'
 services:
-  db:
+  db-postgres:
     image: postgres:16-alpine3.19
-    container_name: sbp_database
+    container_name: sbp_postgres_database
     restart: always
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: sbp_postgres_database
       POSTGRES_USER: sbp
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: sbp
       TZ: "Asia/Tokyo"
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
-      - ./dev/ignore/database/db-data:/var/lib/postgresql/data
-      - ./dev/database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - ./dev/database/seed-data:/seed-data
+      - ./dev/ignore/database/db-data/postgres:/var/lib/postgresql/data
+      - ./dev/database/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./dev/database/postgres/seed-data:/seed-data
+  db-mysql:
+    container_name: sbp_mysql_database
+    image: "mysql:8.2-oracle"
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./dev/database/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./dev/ignore/database/db-data/mysql:/var/lib/mysql
+      - ./dev/database/mysql/seed-data:/seed-data
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=sbp_mysql_database
+      - MYSQL_USER=sbp
+      - MYSQL_PASSWORD=sbp
   redis:
     image: redis:5.0.7
     container_name: sbp_redis_service
