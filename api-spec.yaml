@@ -1,0 +1,247 @@
+openapi: '3.0.2'
+info:
+  description: 'The API documents'
+  version: '1.0.0'
+  title: 'API documents'
+servers:
+  - url: http://localhost:8080/api
+tags:
+  - name: 'product'
+    description: 'Tag for product'
+  - name: 'user'
+    description: 'Tag for user'
+paths:
+  /products:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - product
+      summary: 'Get products'
+      description: 'Get products'
+      operationId: 'getProducts'
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: yyyyMMdd
+            example: '2024-01-01'
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: yyyy-MM-dd
+            example: '2024-01-02'
+      responses:
+        200:
+          description: Load data successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - product
+      summary: 'Create product'
+      description: 'Create product'
+      operationId: 'createProduct'
+      requestBody:
+       description: |
+         Request info
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/CreateProductDto'
+      responses:
+        200:
+          description: Load data successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+  /products/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - product
+      summary: 'Get product detail'
+      description: 'Get product detail'
+      operationId: 'getProductDetail'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Load data successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: 'Get users'
+      description: 'Get users'
+      operationId: 'getUsers'
+      responses:
+        200:
+          description: Load data successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateProductDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Product name
+        company:
+          type: string
+          example: My Company
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Product name
+        company:
+          type: string
+          example: My Company
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: User name
+    ErrorObject:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: A specific error code identifying the type of error.
+              example: '001001001'
+            message:
+              type: string
+              description: A general error message providing a brief description of the encountered issue
+              example: 'Error message'
+            messages:
+              type: object
+              description: A object containing detailed error messages, each describing a specific issue encountered
+              example: {
+                "field_1": "Invalid value for field 1",
+                "field_2": "Invalid value for field 2",
+              }
