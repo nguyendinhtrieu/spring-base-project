@@ -36,3 +36,5 @@ build/
 /http/http-client.private.env.json
 ### Generated log files for application ###
 /logs/
+### Ignore folder for local development ###
+/dev/ignore/

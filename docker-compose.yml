@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    image: postgres:16-alpine3.19
+    container_name: sbp_database
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: sbp
+      POSTGRES_PASSWORD: password
+      TZ: "Asia/Tokyo"
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./dev/ignore/database/db-data:/var/lib/postgresql/data
+      - ./dev/database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./dev/database/seed-data:/seed-data
+  redis:
+    image: redis:5.0.7
+    container_name: sbp_redis_service
+    ports:
+      - "6379:6379"
+    restart: always
