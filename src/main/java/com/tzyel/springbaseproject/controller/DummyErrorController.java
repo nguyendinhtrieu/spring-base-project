@@ -1,6 +1,6 @@
 package com.tzyel.springbaseproject.controller;
 
-import com.tzyel.springbaseproject.constant.enums.MessageCode;
+import com.tzyel.springbaseproject.constant.MessageCode;
 import com.tzyel.springbaseproject.exception.SpringBaseProjectException;
 import com.tzyel.springbaseproject.utils.MessageUtil;
 import org.springframework.security.access.prepost.PreAuthorize;

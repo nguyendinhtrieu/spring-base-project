@@ -1,7 +1,7 @@
 package com.tzyel.springbaseproject.config.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tzyel.springbaseproject.constant.enums.MessageCode;
+import com.tzyel.springbaseproject.constant.MessageCode;
 import com.tzyel.springbaseproject.exception.ErrorObject;
 import com.tzyel.springbaseproject.utils.MessageUtil;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.tzyel.springbaseproject.constant.enums;
+package com.tzyel.springbaseproject.constant;
 
 public interface MessageCode {
     // Warning messages
