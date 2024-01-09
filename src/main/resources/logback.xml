@@ -31,6 +31,9 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE_LOCAL"/>
         </root>
+        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE_LOCAL"/>
+        </logger>
         <logger name="com.tzyel.springbaseproject" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE_LOCAL"/>
         </logger>
@@ -40,6 +43,9 @@
         <root level="INFO">
             <appender-ref ref="SAVE-TO-FILE-ROLLING"/>
         </root>
+        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">
+            <appender-ref ref="SAVE-TO-FILE-ROLLING"/>
+        </logger>
         <logger name="com.tzyel.springbaseproject" level="DEBUG" additivity="false">
             <appender-ref ref="SAVE-TO-FILE-ROLLING"/>
         </logger>

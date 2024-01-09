@@ -1,8 +1,10 @@
 package com.tzyel.springbaseproject.controller;
 
+import com.tzyel.springbaseproject.constant.MessageCode;
 import com.tzyel.springbaseproject.dto.auth.LoginRequestDto;
 import com.tzyel.springbaseproject.dto.auth.LoginResponseDto;
 import com.tzyel.springbaseproject.service.JwtService;
+import com.tzyel.springbaseproject.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +31,7 @@ public class AuthController extends BaseController {
         if (authentication.isAuthenticated()) {
             return new LoginResponseDto(jwtService.generateToken(loginRequestDto.getUsername()));
         } else {
-            throw new UsernameNotFoundException("Invalid user credentials"); // TODO: handle error message later
+            throw new UsernameNotFoundException(MessageUtil.getMessage(MessageCode.E0010002));
         }
     }
 }

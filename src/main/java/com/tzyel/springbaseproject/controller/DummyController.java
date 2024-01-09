@@ -1,7 +1,11 @@
 package com.tzyel.springbaseproject.controller;
 
+import com.tzyel.springbaseproject.dto.DummyReqDto;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +17,11 @@ public class DummyController extends BaseController {
     @GetMapping
     public String member(Principal principal) {
         return "Member!" + principal;
+    }
+
+    @PostMapping
+    public String dummyPost(@Validated @RequestBody DummyReqDto dummyReqDto) {
+        return "Success: " + dummyReqDto;
     }
 
     @PreAuthorize("hasRole('ADMIN')")

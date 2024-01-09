@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +42,7 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
         return this.handleExceptionInternal(ex, errorObject, headers, status, request);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
@@ -49,6 +51,14 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
                         error -> ((FieldError) error).getField(),
                         Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())));
         errorObject.setDetails(errors);
+        return this.handleExceptionInternal(ex, errorObject, headers, status, request);
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        log.error(ex.getMessage(), ex);
+        ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
         return this.handleExceptionInternal(ex, errorObject, headers, status, request);
     }
 

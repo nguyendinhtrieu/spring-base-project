@@ -19,5 +19,6 @@ public interface MessageCode {
     String E0010005 = "E0010005";
     String E0010006 = "E0010006";
     String E0010007 = "E0010007";
+    String E0010008 = "E0010008";
     String E0011000 = "E0011000";
 }

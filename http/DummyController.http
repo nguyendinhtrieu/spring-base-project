@@ -3,6 +3,20 @@ GET {{host}}/dummy
 Authorization: Bearer {{member-jwt-token}}
 Accept: application/json
 
+### POST /dummy
+POST {{host}}/dummy
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "first_field": "first_field",
+  "second_field": "ONE",
+  "third_field": 3,
+  "local_date": "20240205",
+  "local_date_string": "2024-02-05"
+}
+
 ### GET /dummy/user
 GET {{host}}/dummy/user
 Authorization: Bearer {{user-jwt-token}}
