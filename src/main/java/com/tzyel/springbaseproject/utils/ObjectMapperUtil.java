@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class ObjectMapperUtil {
 
-    private static ModelMapper modelMapper = new ModelMapper();
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     /**
      * Model mapper property setting are specified in the following block.
@@ -32,32 +32,32 @@ public class ObjectMapperUtil {
      *
      * @param <D>      type of result object.
      * @param <T>      type of source object to map from.
-     * @param entity   entity that needs to be mapped.
+     * @param source   source object that needs to be mapped.
      * @param outClass class of result object.
      * @return new object of <code>outClass</code> type.
      */
-    public static <D, T> D map(final T entity, Class<D> outClass) {
-        return modelMapper.map(entity, outClass);
+    public static <D, T> D map(final T source, Class<D> outClass) {
+        return modelMapper.map(source, outClass);
     }
 
     /**
      * <p>Note: outClass object must have default constructor with no arguments</p>
      *
-     * @param entityList list of entities that needs to be mapped
+     * @param sourceList list of source object that needs to be mapped
      * @param outCLass   class of result list element
      * @param <D>        type of objects in result list
-     * @param <T>        type of entity in <code>entityList</code>
+     * @param <T>        type of object in <code>sourceList</code>
      * @return list of mapped object with <code><D></code> type.
      */
-    public static <D, T> List<D> mapAll(final Collection<T> entityList, Class<D> outCLass) {
-        return entityList.stream()
-                .map(entity -> map(entity, outCLass))
+    public static <D, T> List<D> mapAll(final Collection<T> sourceList, Class<D> outCLass) {
+        return sourceList.stream()
+                .map(source -> map(source, outCLass))
                 .collect(Collectors.toList());
     }
 
-    public static <D, T> Set<D> mapAllToSet(final Collection<T> entityList, Class<D> outCLass) {
-        return entityList.stream()
-                .map(entity -> map(entity, outCLass))
+    public static <D, T> Set<D> mapAllToSet(final Collection<T> sourceList, Class<D> outCLass) {
+        return sourceList.stream()
+                .map(source -> map(source, outCLass))
                 .collect(Collectors.toSet());
     }
 

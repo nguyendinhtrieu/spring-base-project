@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: username
+    password: password
+    driverClassName: org.h2.Driver
+application:
+  debug: true
+  jwt:
+    secret: c2RmS0o4NzgmXmpma3Nkaio3Zjc4RkpLRGoqN2ZkanNoKjc4N0tGS0Y
+    expirationInSecond: 43200

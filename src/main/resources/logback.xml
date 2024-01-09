@@ -27,6 +27,18 @@
         </rollingPolicy>
     </appender>
 
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_LOCAL"/>
+        </root>
+        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE_LOCAL"/>
+        </logger>
+        <logger name="com.tzyel.springbaseproject" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE_LOCAL"/>
+        </logger>
+    </springProfile>
+
     <springProfile name="local">
         <root level="INFO">
             <appender-ref ref="CONSOLE_LOCAL"/>
