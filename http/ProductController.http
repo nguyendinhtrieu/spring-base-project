@@ -1,0 +1,36 @@
+### SearchProductByKeyword
+GET {{host}}/product?keyword=3
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GetProduct
+GET {{host}}/product/2
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### CreateProduct
+POST {{host}}/product
+Authorization: Bearer {{member-jwt-token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "New name",
+  "note": "Hello"
+}
+
+### updateProduct
+PUT {{host}}/product/5
+Authorization: Bearer {{member-jwt-token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "New name update 2",
+  "note": "Hello"
+}
+
+### deleteProduct
+DELETE {{host}}/product/5
+Authorization: Bearer {{admin-jwt-token}}
+Accept: application/json
