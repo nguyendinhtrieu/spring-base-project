@@ -24,7 +24,6 @@ import java.util.Map;
 @Slf4j
 public class RestTemplateBuilder {
     private static final ObjectWriter OBJECT_WRITER = new ObjectMapper().writer().withDefaultPrettyPrinter();
-    private static final int DEFAULT_TIMEOUT = 3 * 1000;
 
     private final RestTemplate restTemplate;
     private final HttpHeaders headers = new HttpHeaders();
@@ -188,7 +187,7 @@ public class RestTemplateBuilder {
 
     private void buildTimeout() {
         if (timeout == null) {
-            timeout = DEFAULT_TIMEOUT;
+            timeout = ApplicationContextProvider.getProperty("application.client.requestTimeOutInMillis", Integer.class);
         }
         SimpleClientHttpRequestFactory factory = (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
         factory.setConnectTimeout(timeout);

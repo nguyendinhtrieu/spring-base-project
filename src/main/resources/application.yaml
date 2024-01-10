@@ -13,3 +13,5 @@ application:
   jwt:
     secret: ${APPLICATION_JWT_SECRET}
     expirationInSecond: ${APPLICATION_JWT_EXPIRATION_IN_SECOND}
+  client:
+    requestTimeOutInMillis: 5000

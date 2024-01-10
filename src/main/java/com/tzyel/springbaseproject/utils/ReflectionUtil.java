@@ -4,6 +4,16 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class ReflectionUtil {
+    /**
+     * Invokes a method by its name on a given object using Java Reflection.
+     *
+     * @param methodName The name of the method to be invoked
+     * @param object     The object on which the method should be called
+     * @param params     The parameters to be passed to the method
+     * @param <T>        The generic return type of the method
+     * @return The result of invoking the method
+     * @throws RuntimeException If there's an issue invoking the method by reflection
+     */
     public static <T> T callMethod(String methodName, Object object, Object... params) {
         try {
             //noinspection unchecked
@@ -14,6 +24,15 @@ public class ReflectionUtil {
         }
     }
 
+    /**
+     * Retrieves the value of a field from a given object using Java Reflection.
+     *
+     * @param object    The object from which to retrieve the field value
+     * @param fieldName The name of the field to retrieve
+     * @param <T>       The generic type of the field
+     * @return The value of the field
+     * @throws RuntimeException If there's an issue accessing the field by reflection
+     */
     public static <T> T getField(Object object, String fieldName) {
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
