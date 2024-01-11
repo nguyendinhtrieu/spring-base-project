@@ -1,12 +1,11 @@
 package com.tzyel.springbaseproject.client.web_client;
 
+import com.tzyel.springbaseproject.client.ClientTestBase;
 import com.tzyel.springbaseproject.dto.product.CreateProductDto;
 import com.tzyel.springbaseproject.dto.product.ProductDto;
 import com.tzyel.springbaseproject.dto.product.UpdateProductDto;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +13,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -22,18 +20,14 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-/**
- * To run UT: need to start local application first
- */
-@SpringBootTest
-@ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class WebClientTest {
-    private static final String MEMBER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJwaG9uZSI6IjA5ODc2NTQzMjEwIiwiZW1haWwiOiJuZ3V5ZW5kaW5odHJpZXUzNjVAZ21haWwuY29tIiwic3ViIjoibXktbmFtZSIsImlhdCI6MTcwNDI2NTExNiwiZXhwIjoxNzQ3NDY1MTE2fQ.b-NXPKEM56lSkQF9dvfF6qqo_hyCkuKZoXFFNY1laKo";
-    private static final String ADMIN_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJwaG9uZSI6IjA5ODc2NTQzMjEwIiwiZW1haWwiOiJuZ3V5ZW5kaW5odHJpZXUzNjVAZ21haWwuY29tIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE3MDQyNjUxMTYsImV4cCI6MTc0NzQ2NTExNn0.XmydQzngdDLgCE3VN1tG72sHEecDkWKBdkWw2fSdDrY";
+
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        properties = {"server.port=8080"}
+)
+public class WebClientTest extends ClientTestBase {
     private static Integer productId;
 
     @Qualifier("sbpWebClient")
@@ -49,7 +43,7 @@ public class WebClientTest {
 
         Mono<ProductDto> responseMono = webClient.post()
                 .uri("/product")
-                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN))
+                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .body(BodyInserters.fromValue(createProductDto))
                 .exchangeToMono(response -> {
                     assertEquals(HttpStatus.CREATED, response.statusCode());
@@ -57,6 +51,8 @@ public class WebClientTest {
                 });
         ProductDto response = responseMono.block();
         assertNotNull(response);
+        assertEquals(createProductDto.getName(), response.getName());
+        assertEquals(createProductDto.getNote(), response.getNote());
         productId = response.getId();
     }
 
@@ -67,7 +63,7 @@ public class WebClientTest {
                 .uri(uriBuilder -> uriBuilder.path("/product")
                         .queryParam("keyword", "")
                         .build())
-                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN))
+                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .exchangeToMono(response -> {
                     assertEquals(HttpStatus.OK, response.statusCode());
                     return response.bodyToMono(new ParameterizedTypeReference<>() {
@@ -75,7 +71,7 @@ public class WebClientTest {
                 });
         List<ProductDto> response = responseMono.block();
         assertNotNull(response);
-        assertFalse(response.isEmpty());
+        assertEquals(1, response.size());
     }
 
     @Test
@@ -83,7 +79,7 @@ public class WebClientTest {
     public void testGetProduct() {
         Mono<ProductDto> responseMono = webClient.get()
                 .uri("/product/" + productId)
-                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN))
+                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .exchangeToMono(response -> {
                     assertEquals(HttpStatus.OK, response.statusCode());
                     return response.bodyToMono(ProductDto.class);
@@ -100,7 +96,7 @@ public class WebClientTest {
 
         Mono<ProductDto> responseMono = webClient.put()
                 .uri("/product/" + productId)
-                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN))
+                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .body(BodyInserters.fromValue(updateProductDto))
                 .exchangeToMono(response -> {
                     assertEquals(HttpStatus.OK, response.statusCode());
@@ -110,6 +106,7 @@ public class WebClientTest {
         ProductDto response = responseMono.block();
         assertNotNull(response);
         assertEquals(updateProductDto.getName(), response.getName());
+        assertEquals(updateProductDto.getNote(), response.getNote());
     }
 
     @Test
@@ -117,7 +114,7 @@ public class WebClientTest {
     public void testDeleteProduct() {
         Mono<HttpStatusCode> responseMono = webClient.delete()
                 .uri("/product/" + productId)
-                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, ADMIN_TOKEN))
+                .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateAdminAuthorizationToken()))
                 .exchangeToMono(response -> Mono.just(response.statusCode()));
 
         HttpStatusCode response = responseMono.block();

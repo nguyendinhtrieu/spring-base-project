@@ -1,36 +1,26 @@
 package com.tzyel.springbaseproject.client.rest_template;
 
+import com.tzyel.springbaseproject.client.ClientTestBase;
 import com.tzyel.springbaseproject.dto.product.CreateProductDto;
 import com.tzyel.springbaseproject.dto.product.ProductDto;
 import com.tzyel.springbaseproject.dto.product.UpdateProductDto;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-/**
- * To run UT: need to start local application first
- */
-@SpringBootTest
-@ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class RestTemplateBuilderTest {
-    private static final String MEMBER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJwaG9uZSI6IjA5ODc2NTQzMjEwIiwiZW1haWwiOiJuZ3V5ZW5kaW5odHJpZXUzNjVAZ21haWwuY29tIiwic3ViIjoibXktbmFtZSIsImlhdCI6MTcwNDI2NTExNiwiZXhwIjoxNzQ3NDY1MTE2fQ.b-NXPKEM56lSkQF9dvfF6qqo_hyCkuKZoXFFNY1laKo";
-    private static final String ADMIN_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJwaG9uZSI6IjA5ODc2NTQzMjEwIiwiZW1haWwiOiJuZ3V5ZW5kaW5odHJpZXUzNjVAZ21haWwuY29tIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE3MDQyNjUxMTYsImV4cCI6MTc0NzQ2NTExNn0.XmydQzngdDLgCE3VN1tG72sHEecDkWKBdkWw2fSdDrY";
+public class RestTemplateBuilderTest extends ClientTestBase {
+    private static final String REST_TEMPLATE_BEAN_NAME = "sbpRestTemplate";
+
     private static Integer productId;
 
     @Test
@@ -40,38 +30,40 @@ public class RestTemplateBuilderTest {
         createProductDto.setName("New name");
         createProductDto.setNote("Hello");
 
-        ResponseEntity<ProductDto> response = RestTemplateBuilder.init("sbpRestTemplate")
+        ResponseEntity<ProductDto> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.POST)
-                .withHeader(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN)
-                .withUrl("http://localhost:8080/product")
+                .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
+                .withUrl(getServerHost() + "/product")
                 .withBody(createProductDto)
                 .execute(ProductDto.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals(createProductDto.getName(), response.getBody().getName());
+        assertEquals(createProductDto.getNote(), response.getBody().getNote());
         productId = response.getBody().getId();
     }
 
     @Test
     @Order(2)
     public void testGetProducts() {
-        ResponseEntity<List<ProductDto>> response = RestTemplateBuilder.init("sbpRestTemplate")
+        ResponseEntity<List<ProductDto>> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.GET)
-                .withHeader(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN)
-                .withUrl("http://localhost:8080/product")
+                .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
+                .withUrl(getServerHost() + "/product")
                 .execute(new ParameterizedTypeReference<>() {
                 });
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertFalse(response.getBody().isEmpty());
+        assertEquals(1, response.getBody().size());
     }
 
     @Test
     @Order(3)
     public void testGetProduct() {
-        ResponseEntity<ProductDto> response = RestTemplateBuilder.init("sbpRestTemplate")
+        ResponseEntity<ProductDto> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.GET)
-                .withHeader(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN)
-                .withUrl("http://localhost:8080/product/" + productId)
+                .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
+                .withUrl(getServerHost() + "/product/" + productId)
                 .execute(ProductDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -84,23 +76,24 @@ public class RestTemplateBuilderTest {
         updateProductDto.setName("New name update");
         updateProductDto.setNote("Hello update");
 
-        ResponseEntity<ProductDto> response = RestTemplateBuilder.init("sbpRestTemplate")
+        ResponseEntity<ProductDto> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.PUT)
-                .withHeader(HttpHeaders.AUTHORIZATION, MEMBER_TOKEN)
-                .withUrl("http://localhost:8080/product/" + productId)
+                .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
+                .withUrl(getServerHost() + "/product/" + productId)
                 .withBody(updateProductDto)
                 .execute(ProductDto.class);
         assertNotNull(response.getBody());
-        assertEquals("New name update", response.getBody().getName());
+        assertEquals(updateProductDto.getName(), response.getBody().getName());
+        assertEquals(updateProductDto.getNote(), response.getBody().getNote());
     }
 
     @Test
     @Order(5)
     public void testDeleteProduct() {
-        ResponseEntity<?> response = RestTemplateBuilder.init("sbpRestTemplate")
+        ResponseEntity<?> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.DELETE)
-                .withHeader(HttpHeaders.AUTHORIZATION, ADMIN_TOKEN)
-                .withUrl("http://localhost:8080/product/" + productId)
+                .withHeader(HttpHeaders.AUTHORIZATION, generateAdminAuthorizationToken())
+                .withUrl(getServerHost() + "/product/" + productId)
                 .execute();
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
