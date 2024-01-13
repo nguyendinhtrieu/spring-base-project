@@ -51,3 +51,9 @@ If you need to completely reset the database, perform the following steps:
 - If you add a new version to migrate the database inside the resources
   folder [`db.migration`](src%2Fmain%2Fresources%2Fdb%2Fmigration), you need to set `MIGRATE_DATABASE=true` otherwise,
   the application will fail to start.
+
+#### Spotless check & apply
+```shell
+./mvnw spotless:check
+./mvnw spotless:apply
+```
