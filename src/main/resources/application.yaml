@@ -8,6 +8,13 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     open-in-view: false
+  flyway:
+    enabled: ${MIGRATE_DATABASE:false}
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    user: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    locations: db/migration
+    default-schema: public
 application:
   debug: false
   jwt:
