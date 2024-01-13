@@ -14,7 +14,7 @@ services:
     volumes:
       - ./dev/ignore/database/db-data/postgres:/var/lib/postgresql/data
       - ./dev/database/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - ./dev/database/postgres/seed-data:/seed-data
+      - ./src/main/resources/db/migration:/seed-data
   db-mysql:
     container_name: sbp_mysql_database
     image: "mysql:8.2-oracle"

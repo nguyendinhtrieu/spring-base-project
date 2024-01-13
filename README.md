@@ -40,3 +40,14 @@ If you need to completely reset the database, perform the following steps:
 #### Note:
 - Be cautious when using this command as it deletes all database data. This action is irreversible and will result in complete data loss.
 - You can modify the migration database process by editing the `seed-data` mount configuration in the [docker-compose.yml](docker-compose.yml) file under `services.db.volumes`. Update the folder path or settings to use specific migration data or scripts.
+- If you are using Flyway to migrate the database, you don't need to mount `docker-entrypoint-initdb.d` and `seed-data`
+  folders to set up the initial database. Let Flyway handle it for you.
+
+## 3. Important note for migration using Flyway
+
+- The `MIGRATE_DATABASE` environment variable is a flag that specifies whether Flyway should migrate the database when
+  you start the application.
+- By default, the `MIGRATE_DATABASE` environment variable is set to `false`.
+- If you add a new version to migrate the database inside the resources
+  folder [`db.migration`](src%2Fmain%2Fresources%2Fdb%2Fmigration), you need to set `MIGRATE_DATABASE=true` otherwise,
+  the application will fail to start.
