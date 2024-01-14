@@ -20,14 +20,12 @@ public interface SbpFeignClient {
     @RequestMapping(method = RequestMethod.GET, value = "/product")
     ResponseEntity<List<ProductDto>> getProducts(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @RequestParam("keyword") String keyword
-    );
+            @RequestParam("keyword") String keyword);
 
     @RequestMapping(method = RequestMethod.GET, value = "/product/{productId}")
     ResponseEntity<ProductDto> getProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
-            @PathVariable("productId") Integer productId
-    );
+            @PathVariable("productId") Integer productId);
 
     @RequestMapping(method = RequestMethod.POST, value = "/product", consumes = "application/json")
     ResponseEntity<ProductDto> createProduct(

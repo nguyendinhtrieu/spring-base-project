@@ -57,3 +57,5 @@ If you need to completely reset the database, perform the following steps:
 ./mvnw spotless:check
 ./mvnw spotless:apply
 ```
+
+Reference: https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fformatter%2FDefaultCodeFormatterConstants.html

@@ -116,7 +116,7 @@ public class RestTemplateBuilder {
      * .execute();
      *
      * @return ResponseEntity encapsulating the HTTP response with the response body as a String.
-     * The response entity contains the String response body along with status information.
+     *         The response entity contains the String response body along with status information.
      */
     public ResponseEntity<String> execute() {
         buildTimeout();
@@ -167,7 +167,7 @@ public class RestTemplateBuilder {
      * @param typeReference The ParameterizedTypeReference representing the expected response type.
      *                      Example usage: new ParameterizedTypeReference<List<ObjectDto>>() {} for a List of ObjectDto.
      * @return ResponseEntity encapsulating the HTTP response with the inferred complex generic type.
-     * Ensure to specify the desired response type when calling this method.
+     *         Ensure to specify the desired response type when calling this method.
      */
     public <T> ResponseEntity<T> execute(ParameterizedTypeReference<T> typeReference) {
         buildTimeout();
