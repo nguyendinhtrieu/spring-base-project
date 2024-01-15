@@ -98,7 +98,7 @@ public class ProductControllerTest extends IntegrationTestBase {
                 .expectBody()
                 .jsonPath("id").isEqualTo(productId)
                 .jsonPath("name").isEqualTo(updateProductDto.getName())
-                .jsonPath("note").isEqualTo(updateProductDto.getNote());
+                .jsonPath("note").isEqualTo("updateProductDto.getNote()");
 
         verifyDatabase()
                 .table(ProductTable.NAME)
