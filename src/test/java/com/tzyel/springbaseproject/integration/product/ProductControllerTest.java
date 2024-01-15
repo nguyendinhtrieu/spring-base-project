@@ -104,6 +104,9 @@ public class ProductControllerTest extends IntegrationTestBase {
                 .table(ProductTable.NAME)
                 .columns(ProductTable.Column.ID, ProductTable.Column.NAME, ProductTable.Column.NOTE)
                 .existWithValues(productId, updateProductDto.getName(), updateProductDto.getNote());
+
+        String s = null;
+        System.out.println(s.toString());
     }
 
     @Test

@@ -159,8 +159,8 @@
                         <id>validate</id>
                         <phase>validate</phase>
                         <configuration>
-                            <!--                            <configLocation>google_checks.xml</configLocation>-->
-                            <configLocation>sun_checks.xml</configLocation>
+                            <!--                            <configLocation>${project.basedir}/google_checks.xml</configLocation>-->
+                            <configLocation>${project.basedir}/sun_checks.xml</configLocation>
                             <!-- You can customize further configurations here -->
                         </configuration>
                         <goals>
