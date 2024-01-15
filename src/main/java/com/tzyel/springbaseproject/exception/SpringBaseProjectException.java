@@ -43,11 +43,6 @@ public class SpringBaseProjectException extends RuntimeException {
             return new Builder(SbpInternalServerErrorException.class).errorCode(errorCode).params(params);
         }
 
-        private Builder exceptionClass(Class<? extends SpringBaseProjectException> exceptionClass) {
-            this.exceptionClass = exceptionClass;
-            return this;
-        }
-
         private Builder errorCode(String errorCode) {
             this.errorCode = errorCode;
             return this;
