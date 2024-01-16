@@ -9,3 +9,7 @@ application:
   jwt:
     secret: c2RmS0o4NzgmXmpma3Nkaio3Zjc4RkpLRGoqN2ZkanNoKjc4N0tGS0Y
     expirationInSecond: 43200
+  aws:
+    serviceEnvironment: mock
+    region: ap-southeast-1
+    bucket: sbp-bucket

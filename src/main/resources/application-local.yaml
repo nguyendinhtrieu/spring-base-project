@@ -1,2 +1,6 @@
 application:
   debug: true
+  aws:
+    serviceEnvironment: localstack
+    localstack:
+      serviceEndpoint: http://localhost:4566

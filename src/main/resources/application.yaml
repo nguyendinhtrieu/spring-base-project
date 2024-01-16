@@ -22,6 +22,12 @@ application:
     expirationInSecond: ${APPLICATION_JWT_EXPIRATION_IN_SECOND}
   client:
     requestTimeOutInMillis: 5000
+  aws:
+    serviceEnvironment: default
+    region: ${APPLICATION_AWS_REGION}
+    accessKey: ${APPLICATION_AWS_ACCESS_KEY:}
+    secretKey: ${APPLICATION_AWS_SECRET_KEY:}
+    bucket: ${APPLICATION_AWS_BUCKET}
 feign:
   client:
     config:

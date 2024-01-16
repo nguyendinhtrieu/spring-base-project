@@ -1,14 +1,17 @@
 package com.tzyel.springbaseproject.client;
 
+import com.tzyel.springbaseproject.UnitTestConfiguration;
 import com.tzyel.springbaseproject.util.AuthenticationTestUtil;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@ContextConfiguration(classes = UnitTestConfiguration.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public abstract class ClientTestBase {
     @LocalServerPort

@@ -105,3 +105,23 @@ To use AWS CLI with `localstack` as the default profile, follow these steps:
     aws_access_key_id = secret_key
     aws_secret_access_key = access_key
     ```
+
+### Configuration Properties
+
+The AWS service environment is specified using the `application.aws.serviceEnvironment` property in
+the [application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml) file. Possible values for this property are:
+
+- `localstack`: Utilizes LocalStack for AWS services in a local development environment.
+- `default`: Uses default AWS configurations.
+- `credential`: Uses specific AWS credentials.
+- `mock`: For mocking AWS S3 in unit testing.
+
+### Environment Variables
+
+There are additional environment variables related to AWS service settings:
+
+- `APPLICATION_AWS_REGION`: Sets the AWS region for the application.
+- `APPLICATION_AWS_ACCESS_KEY`, `APPLICATION_AWS_SECRET_KEY`: AWS access key and secret key for the application. You do
+  not have to provide these environment variables if you are using the default AWS configuration for deployment, as AWS
+  will handle them automatically. For localstack, you can provide any values since they are not required.
+- `APPLICATION_AWS_BUCKET`: The AWS S3 bucket for the application.

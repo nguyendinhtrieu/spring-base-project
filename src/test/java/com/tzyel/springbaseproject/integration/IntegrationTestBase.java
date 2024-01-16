@@ -1,5 +1,6 @@
 package com.tzyel.springbaseproject.integration;
 
+import com.tzyel.springbaseproject.UnitTestConfiguration;
 import com.tzyel.springbaseproject.util.AuthenticationTestUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -25,6 +27,7 @@ import java.util.function.Consumer;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@ContextConfiguration(classes = UnitTestConfiguration.class)
 @SqlGroup({
         @Sql(scripts = {"classpath:integration/sql/setup_data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(scripts = {"classpath:integration/sql/teardown_data.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
