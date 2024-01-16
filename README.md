@@ -69,3 +69,39 @@ To generate `PMD` and `CPD` reports, use the following command:
 ```shell
 ./mvnw pmd:pmd pmd:cpd
 ```
+
+## 5. Setting Up AWS Service Environment
+
+For local development, we utilize `localstack` as the AWS service environment. The `localstack` service is configured in
+the [docker-compose.yml](docker-compose.yml) file.
+
+### Configuring `localstack` for AWS CLI
+
+To use AWS CLI with `localstack` as the default profile, follow these steps:
+
+#### 1. Start `localstack` Service:
+
+- Ensure `localstack` is up and running by starting the service.
+
+#### 2. Install the AWS CLI:
+
+- Install the AWS CLI on your local machine.
+
+#### 3. Create AWS Configuration File (`~/.aws/config`):
+
+- Create a configuration file for the default profile at `~/.aws/config` with the following content:
+    ```ini
+    [default]
+    region = ap-southeast-1
+    endpoint_url = http://localhost:4566
+    ```
+
+#### 4. Create AWS Credentials File (`~/.aws/credentials`):
+
+- Create a credentials file for the default profile at `~/.aws/credentials` with the following content (keys' values
+  are not important for default AWS using localstack, so you can use any values you want):
+    ```ini
+    [default]
+    aws_access_key_id = secret_key
+    aws_secret_access_key = access_key
+    ```

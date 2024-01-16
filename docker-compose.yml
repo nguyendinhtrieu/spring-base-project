@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db-postgres:
     image: postgres:16-alpine3.19
@@ -36,3 +36,20 @@ services:
     ports:
       - "6379:6379"
     restart: always
+  localstack:
+    container_name: sbp_localstack
+    image: localstack/localstack:3.0.2
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      - DEFAULT_REGION=ap-southeast-1
+      - AWS_DEFAULT_REGION=ap-southeast-1
+      - USE_SSL=1
+      - PERSISTENCE = 1
+      - DATA_DIR=/tmp/localstack/data
+      - DEBUG=1
+    volumes:
+      - ./dev/ignore/localstack/var/lib/localstack:/var/lib/localstack
+      - ./dev/ignore/localstack/var/run/docker.sock:/var/run/docker.sock
