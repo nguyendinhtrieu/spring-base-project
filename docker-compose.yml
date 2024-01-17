@@ -53,3 +53,10 @@ services:
     volumes:
       - ./dev/ignore/localstack/var/lib/localstack:/var/lib/localstack
       - ./dev/ignore/localstack/var/run/docker.sock:/var/run/docker.sock
+  mail-server:
+    platform: linux/x86_64
+    image: mailhog/mailhog:v1.0.1
+    container_name: sbp-mail-server
+    ports:
+      - "1025:1025"
+      - "8025:8025"

@@ -125,3 +125,13 @@ There are additional environment variables related to AWS service settings:
   not have to provide these environment variables if you are using the default AWS configuration for deployment, as AWS
   will handle them automatically. For localstack, you can provide any values since they are not required.
 - `APPLICATION_AWS_BUCKET`: The AWS S3 bucket for the application.
+
+## 6. Setting Up Mail Server
+
+For the development environment, we utilize `mailhog` as our mail server. The `mailhog` service is configured in
+the [docker-compose.yml](docker-compose.yml) file.
+
+- The `mailhog` SMTP server starts on port 1025.
+- The `mailhog` HTTP server starts on port 8025. You can access this to view results in the MailHog UI.
+- Note: `mailhog` does not support SSL without additional settings. Ensure that the `mail.smtp.ssl.enable` property is
+  set to `false`.
