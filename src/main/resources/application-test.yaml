@@ -13,3 +13,5 @@ application:
     serviceEnvironment: mock
     region: ap-southeast-1
     bucket: sbp-bucket
+  mail:
+    serviceEnvironment: mock

@@ -28,6 +28,15 @@ application:
     accessKey: ${APPLICATION_AWS_ACCESS_KEY:}
     secretKey: ${APPLICATION_AWS_SECRET_KEY:}
     bucket: ${APPLICATION_AWS_BUCKET}
+  mail:
+    serviceEnvironment: ${APPLICATION_MAIL_SERVICE_ENVIRONMENT}
+    smtp:
+      host: ${APPLICATION_MAIL_SMTP_HOST:}
+      port: ${APPLICATION_MAIL_SMTP_PORT:}
+      username: ${APPLICATION_MAIL_SMTP_USERNAME:}
+      password: ${APPLICATION_MAIL_SMTP_PASSWORD:}
+      sender: ${APPLICATION_MAIL_SMTP_SENDER:}
+      sslEnable: ${APPLICATION_MAIL_SMTP_SSL_ENABLE:}
 feign:
   client:
     config:
