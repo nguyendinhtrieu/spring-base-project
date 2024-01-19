@@ -41,6 +41,10 @@ application:
     ses:
       region: ${APPLICATION_MAIL_AWS_SES_REGION:}
       sender: ${APPLICATION_MAIL_AWS_SES_SENDER:}
+    sendgrid:
+      apiKey: ${APPLICATION_MAIL_SENDGRID_API_KEY:}
+      fromEmail: ${APPLICATION_MAIL_SENDGRID_FROM_EMAIL:}
+      fromName: ${APPLICATION_MAIL_SENDGRID_FROM_NAME:}
 feign:
   client:
     config:

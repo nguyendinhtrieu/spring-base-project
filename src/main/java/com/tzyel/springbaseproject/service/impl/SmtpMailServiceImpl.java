@@ -1,16 +1,25 @@
 package com.tzyel.springbaseproject.service.impl;
 
 import com.tzyel.springbaseproject.config.properties.SmtpProperties;
+import com.tzyel.springbaseproject.dto.mail.MailAttachmentDto;
+import com.tzyel.springbaseproject.exception.SpringBaseProjectException;
 import com.tzyel.springbaseproject.service.MailService;
+import jakarta.activation.DataHandler;
 import jakarta.mail.Authenticator;
+import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -23,26 +32,45 @@ import java.util.Properties;
 @Service
 @ConditionalOnProperty(value = {"application.mail.serviceEnvironment"}, havingValue = "smtp")
 public class SmtpMailServiceImpl implements MailService {
+    private final SmtpProperties smtpProperties;
+
     @Value("${application.mail.enable}")
     private boolean isEnableMail;
-
-    private static final String CONTENT_TYPE_TEXT_HTML = "text/html;charset=\"utf-8\"";
-
-    private final SmtpProperties smtpProperties;
 
     public SmtpMailServiceImpl(SmtpProperties smtpProperties) {
         this.smtpProperties = smtpProperties;
     }
 
     @Override
-    public void sendMail(String subject, String content, List<String> sendToEmails, List<String> ccEmails, List<String> bccEmails) throws Exception {
+    public void sendMail(String subject, String content, List<MailAttachmentDto> attachmentList, List<String> toEmails, List<String> ccEmails, List<String> bccEmails) throws Exception {
         if (!isEnableMail) {
             log.info("Mail is not enabled. No mail will be sent.");
             return;
         }
 
-        Message message = buildEmail(subject, sendToEmails, ccEmails, bccEmails);
-        message.setContent(content, CONTENT_TYPE_TEXT_HTML);
+        Message message = buildEmail(subject, toEmails, ccEmails, bccEmails);
+
+        Multipart multipart = new MimeMultipart();
+        BodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setContent(content, ContentType.TEXT_HTML.getMimeType());
+        multipart.addBodyPart(messageBodyPart);
+
+        if (!CollectionUtils.isEmpty(attachmentList)) {
+            attachmentList.forEach(mailAttachmentDto -> {
+                MimeBodyPart mimeBodyPart = new MimeBodyPart();
+                ByteArrayDataSource byteArrayDataSource = new ByteArrayDataSource(mailAttachmentDto.getFileContent(), mailAttachmentDto.getContentType());
+                try {
+                    mimeBodyPart.setDataHandler(new DataHandler(byteArrayDataSource));
+                    mimeBodyPart.setFileName(mailAttachmentDto.getFileName());
+                    multipart.addBodyPart(mimeBodyPart);
+                } catch (Exception e) {
+                    throw new SpringBaseProjectException("Unable to create attachments for sending mail.", e);
+                }
+            });
+        }
+
+        message.setContent(multipart);
+
         Transport.send(message);
     }
 

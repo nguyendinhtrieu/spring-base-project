@@ -7,6 +7,7 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.tzyel.springbaseproject.dto.mail.MailAttachmentDto;
 import com.tzyel.springbaseproject.service.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,17 +30,16 @@ public class SesMailServiceImpl implements MailService {
     private String sender;
 
     @Override
-    public void sendMail(String subject, String content, List<String> sendToEmails, List<String> ccEmails, List<String> bccEmails) throws Exception {
+    public void sendMail(String subject, String content, List<MailAttachmentDto> attachmentList, List<String> toEmails, List<String> ccEmails, List<String> bccEmails) throws Exception {
         if (!isEnableMail) {
             log.info("Mail is not enabled. No mail will be sent.");
             return;
         }
-
-        sendAwsSesMail(subject, content, true, sendToEmails, ccEmails, bccEmails);
+        sendAwsSesMail(subject, content, attachmentList, true, toEmails, ccEmails, bccEmails);
     }
 
-    private void sendAwsSesMail(String subject, String content, boolean isHtmlContentType, List<String> sendToEmails,
-                                List<String> ccEmails, List<String> bccEmails) {
+    private void sendAwsSesMail(String subject, String content, List<MailAttachmentDto> attachmentList, boolean isHtmlContentType,
+                                List<String> sendToEmails, List<String> ccEmails, List<String> bccEmails) throws Exception {
         AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(region).build();
 
         SendEmailRequest request = new SendEmailRequest();
@@ -61,6 +61,8 @@ public class SesMailServiceImpl implements MailService {
         request.setSource(sender);
         request.setDestination(destination);
         request.setMessage(message);
+
+        // TODO: Handle attachmentList
 
         client.sendEmail(request);
     }

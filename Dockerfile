@@ -28,6 +28,10 @@ ENV APPLICATION_MAIL_SMTP_SSL_ENABLE=false
 # SES Configuration (used when APPLICATION_MAIL_SERVICE_ENVIRONMENT is "ses")
 ENV APPLICATION_MAIL_AWS_SES_REGION=ap-southeast-1
 ENV APPLICATION_MAIL_AWS_SES_SENDER=application_mail_aws_ses_sender
+# SendGrid Configuration (used when APPLICATION_MAIL_SERVICE_ENVIRONMENT is "sendgrid")
+ENV APPLICATION_MAIL_SENDGRID_API_KEY=application_mail_sendgrid_api_key
+ENV APPLICATION_MAIL_SENDGRID_FROM_EMAIL=sbp_test_email@example.com
+ENV APPLICATION_MAIL_SENDGRID_FROM_NAME=application_mail_sendgrid_from_name
 
 RUN mkdir -p /usr/local/springbaseproject/
 

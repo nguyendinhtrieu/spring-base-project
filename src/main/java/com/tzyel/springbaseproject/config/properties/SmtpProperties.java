@@ -2,11 +2,9 @@ package com.tzyel.springbaseproject.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@EnableConfigurationProperties
 @ConfigurationProperties("application.mail.smtp")
 @Data
 public class SmtpProperties {
