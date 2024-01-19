@@ -135,3 +135,44 @@ the [docker-compose.yml](docker-compose.yml) file.
 - The `mailhog` HTTP server starts on port 8025. You can access this to view results in the MailHog UI.
 - Note: `mailhog` does not support SSL without additional settings. Ensure that the `mail.smtp.ssl.enable` property is
   set to `false`.
+
+### Configuration Properties
+
+You can control the logic of sending emails by adjusting the `application.mail.enable` property. Set it to `true` to enable email functionality, or `false` to disable it.
+
+Specify the mail service environment using the `application.mail.serviceEnvironment` property in the [application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml) file. The possible values for this property are:
+
+- `smtp`: Utilizes SMTP for mail services, supporting Gmail or Mailhog.
+- `ses`: Uses AWS SES for sending emails.
+- `sendgrid`: Uses SendGrid for sending emails.
+- `mock`: Enables mocking for sending emails during unit testing.
+
+### Environment Variables
+
+Additional environment variables are required based on the chosen mail service environment:
+
+#### SMTP Configuration (`application.mail.serviceEnvironment=smtp`)
+
+If the mail service environment is set to `smtp`, provide the following environment variables:
+
+- `APPLICATION_MAIL_SMTP_HOST`: SMTP host.
+- `APPLICATION_MAIL_SMTP_PORT`: SMTP port.
+- `APPLICATION_MAIL_SMTP_USERNAME`: SMTP username (for Mailhog, any value is acceptable).
+- `APPLICATION_MAIL_SMTP_PASSWORD`: SMTP password (for Mailhog, any value is acceptable).
+- `APPLICATION_MAIL_SMTP_SENDER`: Specify the sender of the emails.
+- `APPLICATION_MAIL_SMTP_SSL_ENABLE`: Set to `true` to enable SSL, or `false` otherwise.
+
+#### AWS SES Configuration (`application.mail.serviceEnvironment=ses`)
+
+If the mail service environment is set to `ses`, provide the following environment variables:
+
+- `APPLICATION_MAIL_AWS_SES_REGION`: Specify the AWS SES region.
+- `APPLICATION_MAIL_AWS_SES_SENDER`: Specify the sender email for AWS SES.
+
+#### SendGrid Configuration (`application.mail.serviceEnvironment=sendgrid`)
+
+If the mail service environment is set to `sendgrid`, provide the following environment variables:
+
+- `APPLICATION_MAIL_SENDGRID_API_KEY`: Specify the SendGrid API key.
+- `APPLICATION_MAIL_SENDGRID_FROM_EMAIL`: Specify the sender email address for SendGrid.
+- `APPLICATION_MAIL_SENDGRID_FROM_NAME`: Specify the sender name for SendGrid.
