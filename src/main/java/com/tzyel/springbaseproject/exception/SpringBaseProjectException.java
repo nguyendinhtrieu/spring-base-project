@@ -9,6 +9,10 @@ import lombok.Setter;
 public class SpringBaseProjectException extends RuntimeException {
     private ErrorObject error;
 
+    public SpringBaseProjectException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public SpringBaseProjectException(ErrorObject errorObject) {
         super(errorObject.getMessage());
         this.error = errorObject;

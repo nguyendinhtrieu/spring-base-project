@@ -29,6 +29,7 @@ application:
     secretKey: ${APPLICATION_AWS_SECRET_KEY:}
     bucket: ${APPLICATION_AWS_BUCKET}
   mail:
+    enable: ${APPLICATION_MAIL_ENABLE:false}
     serviceEnvironment: ${APPLICATION_MAIL_SERVICE_ENVIRONMENT}
     smtp:
       host: ${APPLICATION_MAIL_SMTP_HOST:}
@@ -37,6 +38,9 @@ application:
       password: ${APPLICATION_MAIL_SMTP_PASSWORD:}
       sender: ${APPLICATION_MAIL_SMTP_SENDER:}
       sslEnable: ${APPLICATION_MAIL_SMTP_SSL_ENABLE:}
+    ses:
+      region: ${APPLICATION_MAIL_AWS_SES_REGION:}
+      sender: ${APPLICATION_MAIL_AWS_SES_SENDER:}
 feign:
   client:
     config:

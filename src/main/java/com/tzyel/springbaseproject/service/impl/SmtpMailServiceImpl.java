@@ -11,6 +11,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +23,9 @@ import java.util.Properties;
 @Service
 @ConditionalOnProperty(value = {"application.mail.serviceEnvironment"}, havingValue = "smtp")
 public class SmtpMailServiceImpl implements MailService {
+    @Value("${application.mail.enable}")
+    private boolean isEnableMail;
+
     private static final String CONTENT_TYPE_TEXT_HTML = "text/html;charset=\"utf-8\"";
 
     private final SmtpProperties smtpProperties;
@@ -31,14 +35,13 @@ public class SmtpMailServiceImpl implements MailService {
     }
 
     @Override
-    public void sendMail(String subject, String content, List<String> sendToEmails) throws Exception {
-        sendMail(subject, content, sendToEmails, null, null);
-    }
-
-    @Override
     public void sendMail(String subject, String content, List<String> sendToEmails, List<String> ccEmails, List<String> bccEmails) throws Exception {
-        Message message = buildEmail(subject, sendToEmails, ccEmails, bccEmails);
+        if (!isEnableMail) {
+            log.info("Mail is not enabled. No mail will be sent.");
+            return;
+        }
 
+        Message message = buildEmail(subject, sendToEmails, ccEmails, bccEmails);
         message.setContent(content, CONTENT_TYPE_TEXT_HTML);
         Transport.send(message);
     }

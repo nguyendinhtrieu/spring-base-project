@@ -67,6 +67,13 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ex.getMessage(), ex);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorObject errorObject = ex.getError();
+
+        if (errorObject == null) {
+            errorObject = new ErrorObject();
+            errorObject.setCode(MessageCode.E0010001);
+            errorObject.setMessage(ex.getMessage());
+        }
+
         setLogDebug(errorObject, ex.getStackTrace());
 
         if (ex instanceof SbpNotFoundException) {
