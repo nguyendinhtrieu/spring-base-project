@@ -11,8 +11,7 @@ application:
     expirationInSecond: 43200
   redis:
     host: localhost
-#    port: 63790
-    port: 6666
+    port: 63790
     password:
   aws:
     serviceEnvironment: mock
