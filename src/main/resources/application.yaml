@@ -15,6 +15,21 @@ spring:
     password: ${DATABASE_PASSWORD}
     locations: db/migration
     default-schema: public
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            clientId: clientId
+            clientSecret: clientSecret
+            scope: openid
+            redirect-uri: http://localhost:8080/login/oauth2/code/cognito
+            clientName: clientName
+        provider:
+          cognito:
+#            issuerUri: https://cognito-idp.{region}.amazonaws.com/{poolId}
+            issuerUri: http://localhost:9229/.cognito/db/local_0Ywj6q4k
+            user-name-attribute: cognito:username
 application:
   debug: false
   jwt:

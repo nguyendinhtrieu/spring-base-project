@@ -60,3 +60,10 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+  cognitolocal:
+    image: jagregory/cognito-local:3.23.2
+    container_name: sbp_cognitolocal
+    ports:
+      - "9229:9229"
+    volumes:
+      - ./cognito:/usr/src/app/.cognito
