@@ -9,6 +9,11 @@ application:
   jwt:
     secret: c2RmS0o4NzgmXmpma3Nkaio3Zjc4RkpLRGoqN2ZkanNoKjc4N0tGS0Y
     expirationInSecond: 43200
+  redis:
+    host: localhost
+#    port: 63790
+    port: 6666
+    password:
   aws:
     serviceEnvironment: mock
     region: ap-southeast-1

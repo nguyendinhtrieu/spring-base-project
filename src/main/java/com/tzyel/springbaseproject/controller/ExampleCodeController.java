@@ -7,7 +7,10 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.tzyel.springbaseproject.dto.mail.MailAttachmentDto;
 import com.tzyel.springbaseproject.dto.mail.template.DummyMailTemplateDto;
+import com.tzyel.springbaseproject.entity.redis.StudentRedisEntity;
+import com.tzyel.springbaseproject.repository.redis.StudentRedisRepository;
 import com.tzyel.springbaseproject.service.MailService;
+import com.tzyel.springbaseproject.service.RedisService;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +26,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,6 +38,28 @@ public class ExampleCodeController {
     private AmazonS3 amazonS3;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private StudentRedisRepository studentRedisRepository;
+
+    /**
+     * {@code
+     * curl -X GET http://localhost:8080/example/redis
+     * }
+     */
+    @GetMapping("redis")
+    public void redisExample() throws Exception {
+        StudentRedisEntity studentRedisEntity = new StudentRedisEntity();
+        studentRedisEntity.setId(new Date().toString());
+        studentRedisEntity.setName("Name 1");
+        studentRedisRepository.save(studentRedisEntity);
+
+        studentRedisRepository.findAll();
+
+        redisService.setValue("KEY", studentRedisEntity, 100000000, true);
+        redisService.getValue("KEY");
+    }
 
     /**
      * {@code

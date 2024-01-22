@@ -20,6 +20,10 @@ application:
   jwt:
     secret: ${APPLICATION_JWT_SECRET}
     expirationInSecond: ${APPLICATION_JWT_EXPIRATION_IN_SECOND}
+  redis:
+    host: ${APPLICATION_REDIS_HOST}
+    port: ${APPLICATION_REDIS_PORT}
+    password: ${APPLICATION_REDIS_PASSWORD:}
   client:
     requestTimeOutInMillis: 5000
   aws:
