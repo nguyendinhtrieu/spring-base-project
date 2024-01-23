@@ -1,6 +1,7 @@
 package com.tzyel.springbaseproject.config;
 
 import com.tzyel.springbaseproject.config.filter.JwtAuthenticationFilter;
+import com.tzyel.springbaseproject.constant.ViewHtmlConst;
 import com.tzyel.springbaseproject.service.ApplicationUserDetailsService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +14,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -27,13 +28,16 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final ApplicationUserDetailsService userDetailsService;
     private final AuthenticationEntryPoint authEntryPoint;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           ApplicationUserDetailsService userDetailsService,
-                          @Qualifier("customAuthenticationEntryPoint") AuthenticationEntryPoint authEntryPoint) {
+                          @Qualifier("customAuthenticationEntryPoint") AuthenticationEntryPoint authEntryPoint,
+                          AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
         this.authEntryPoint = authEntryPoint;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
@@ -46,15 +50,30 @@ public class SecurityConfig {
                                         "/health",
                                         "/auth/login"
                                 ).permitAll()
+                                .requestMatchers(ViewHtmlConst.ANT_MATCHERS_RESOURCES).permitAll()
                                 .anyRequest().authenticated()
 //                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                        .requestMatchers("/api/user/**").hasRole("USER")
                 )
-                .httpBasic(basic -> basic.authenticationEntryPoint(authEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin(formLogin -> {
+                    formLogin.loginPage("/login");
+                    formLogin.defaultSuccessUrl("/");
+                    formLogin.failureUrl("/login?error=true");
+                    formLogin.permitAll();
+                    formLogin.successHandler(authenticationSuccessHandler);
+                })
+                .logout(logout -> {
+                    logout.logoutSuccessUrl("/login?logout");
+                    logout.invalidateHttpSession(true);
+                    logout.permitAll();
+                })
+                .sessionManagement(session -> {
+                    session.maximumSessions(-1);
+                    session.sessionConcurrency(sessionConcurrency ->
+                            sessionConcurrency.sessionRegistry(new SessionRegistryImpl()));
+                })
         ;
+
         return http.build();
     }
 
