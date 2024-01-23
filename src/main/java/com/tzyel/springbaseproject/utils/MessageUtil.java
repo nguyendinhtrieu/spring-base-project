@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class MessageUtil {
-    //    private static final Locale DEFAULT_LOCALE = new Locale("jp");
+    // private static final Locale DEFAULT_LOCALE = Locale.JAPAN;
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
     private static MessageSource messageSource;
 
