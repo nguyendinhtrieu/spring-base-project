@@ -9,7 +9,7 @@ public interface ViewHtmlConst {
     String[] ANT_MATCHERS_RESOURCES = {
             "/css/**",
             "/bootstrap/**",
-            "/js/**",
+            "/static/js/**",
             "/images/**",
             "/vendor/**",
             "/fonts/**",
