@@ -11,7 +11,7 @@ import java.nio.file.attribute.UserPrincipal;
 public class HomeController {
     @GetMapping("/")
     public String homepage(@AuthenticationPrincipal UserPrincipal user) {
-        return ViewHtmlConst.HOME;
+        return ViewHtmlConst.DASHBOARD;
     }
 
     @GetMapping("/login")

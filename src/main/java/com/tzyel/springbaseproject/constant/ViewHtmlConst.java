@@ -3,7 +3,7 @@ package com.tzyel.springbaseproject.constant;
 public interface ViewHtmlConst {
     String LOGIN = "login";
     String ERROR = "error";
-    String HOME = "home";
+    String DASHBOARD = "dashboard";
     String REDIRECT_SLASH = "redirect:/";
 
     String[] ANT_MATCHERS_RESOURCES = {
