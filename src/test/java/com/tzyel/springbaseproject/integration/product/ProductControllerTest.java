@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Sql(scripts = {"classpath:integration/sql/product/setup_project.sql"})
 public class ProductControllerTest extends IntegrationTestBase {
-    private static final String BASE_PATH = "/product";
+    private static final String BASE_PATH = "/api/product";
 
     @Test
     public void testSearchProductByKeyword() {

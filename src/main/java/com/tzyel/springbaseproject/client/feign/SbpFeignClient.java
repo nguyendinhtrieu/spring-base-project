@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "SbpFeignClient", url = "http://localhost:8080")
+@FeignClient(name = "SbpFeignClient", url = "http://localhost:8080/api")
 public interface SbpFeignClient {
     @RequestMapping(method = RequestMethod.GET, value = "/product")
     ResponseEntity<List<ProductDto>> getProducts(

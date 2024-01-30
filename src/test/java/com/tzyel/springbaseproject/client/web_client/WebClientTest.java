@@ -42,7 +42,7 @@ public class WebClientTest extends ClientTestBase {
         createProductDto.setNote("Hello");
 
         Mono<ProductDto> responseMono = webClient.post()
-                .uri("/product")
+                .uri("/api/product")
                 .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .body(BodyInserters.fromValue(createProductDto))
                 .exchangeToMono(response -> {
@@ -60,7 +60,7 @@ public class WebClientTest extends ClientTestBase {
     @Order(2)
     public void testGetProducts() {
         Mono<List<ProductDto>> responseMono = webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/product")
+                .uri(uriBuilder -> uriBuilder.path("/api/product")
                         .queryParam("keyword", "")
                         .build())
                 .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
@@ -78,7 +78,7 @@ public class WebClientTest extends ClientTestBase {
     @Order(3)
     public void testGetProduct() {
         Mono<ProductDto> responseMono = webClient.get()
-                .uri("/product/" + productId)
+                .uri("/api/product/" + productId)
                 .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .exchangeToMono(response -> {
                     assertEquals(HttpStatus.OK, response.statusCode());
@@ -95,7 +95,7 @@ public class WebClientTest extends ClientTestBase {
         updateProductDto.setNote("Hello update");
 
         Mono<ProductDto> responseMono = webClient.put()
-                .uri("/product/" + productId)
+                .uri("/api/product/" + productId)
                 .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken()))
                 .body(BodyInserters.fromValue(updateProductDto))
                 .exchangeToMono(response -> {
@@ -113,7 +113,7 @@ public class WebClientTest extends ClientTestBase {
     @Order(5)
     public void testDeleteProduct() {
         Mono<HttpStatusCode> responseMono = webClient.delete()
-                .uri("/product/" + productId)
+                .uri("/api/product/" + productId)
                 .headers(httpHeaders -> httpHeaders.add(HttpHeaders.AUTHORIZATION, generateAdminAuthorizationToken()))
                 .exchangeToMono(response -> Mono.just(response.statusCode()));
 

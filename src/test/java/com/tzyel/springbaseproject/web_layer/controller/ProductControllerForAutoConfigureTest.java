@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProductControllerForAutoConfigureTest extends ControllerTestBase {
-    private static final String BASE_PATH = "/product";
+    private static final String BASE_PATH = "/api/product";
 
     @MockBean
     private ProductService productService;

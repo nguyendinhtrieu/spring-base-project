@@ -33,7 +33,7 @@ public class RestTemplateBuilderTest extends ClientTestBase {
         ResponseEntity<ProductDto> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.POST)
                 .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
-                .withUrl(getServerHost() + "/product")
+                .withUrl(getServerHost() + "/api/product")
                 .withBody(createProductDto)
                 .execute(ProductDto.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -49,7 +49,7 @@ public class RestTemplateBuilderTest extends ClientTestBase {
         ResponseEntity<List<ProductDto>> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.GET)
                 .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
-                .withUrl(getServerHost() + "/product")
+                .withUrl(getServerHost() + "/api/product")
                 .execute(new ParameterizedTypeReference<>() {
                 });
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -63,7 +63,7 @@ public class RestTemplateBuilderTest extends ClientTestBase {
         ResponseEntity<ProductDto> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.GET)
                 .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
-                .withUrl(getServerHost() + "/product/" + productId)
+                .withUrl(getServerHost() + "/api/product/" + productId)
                 .execute(ProductDto.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -79,7 +79,7 @@ public class RestTemplateBuilderTest extends ClientTestBase {
         ResponseEntity<ProductDto> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.PUT)
                 .withHeader(HttpHeaders.AUTHORIZATION, generateMemberAuthorizationToken())
-                .withUrl(getServerHost() + "/product/" + productId)
+                .withUrl(getServerHost() + "/api/product/" + productId)
                 .withBody(updateProductDto)
                 .execute(ProductDto.class);
         assertNotNull(response.getBody());
@@ -93,7 +93,7 @@ public class RestTemplateBuilderTest extends ClientTestBase {
         ResponseEntity<?> response = RestTemplateBuilder.init(REST_TEMPLATE_BEAN_NAME)
                 .withMethod(HttpMethod.DELETE)
                 .withHeader(HttpHeaders.AUTHORIZATION, generateAdminAuthorizationToken())
-                .withUrl(getServerHost() + "/product/" + productId)
+                .withUrl(getServerHost() + "/api/product/" + productId)
                 .execute();
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());

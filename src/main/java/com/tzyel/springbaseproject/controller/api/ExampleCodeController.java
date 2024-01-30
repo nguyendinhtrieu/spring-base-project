@@ -1,4 +1,4 @@
-package com.tzyel.springbaseproject.controller;
+package com.tzyel.springbaseproject.controller.api;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -30,8 +30,8 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("example")
-public class ExampleCodeController {
+@RequestMapping("api/example")
+public class ExampleCodeController extends ApiBaseController {
     @Value("${application.aws.bucket}")
     private String bucket;
     @Autowired
@@ -45,7 +45,7 @@ public class ExampleCodeController {
 
     /**
      * {@code
-     * curl -X GET http://localhost:8080/example/redis
+     * curl -X GET http://localhost:8080/api/example/redis
      * }
      */
     @GetMapping("redis")
@@ -63,7 +63,7 @@ public class ExampleCodeController {
 
     /**
      * {@code
-     * curl -X GET http://localhost:8080/example/mail
+     * curl -X GET http://localhost:8080/api/example/mail
      * }
      */
     @GetMapping("mail")
@@ -81,7 +81,7 @@ public class ExampleCodeController {
 
     /**
      * {@code
-     * curl -X GET http://localhost:8080/example/aws
+     * curl -X GET http://localhost:8080/api/example/aws
      * }
      */
     @GetMapping("aws")

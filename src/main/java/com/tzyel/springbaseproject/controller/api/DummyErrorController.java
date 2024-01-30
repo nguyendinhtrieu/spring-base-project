@@ -1,4 +1,4 @@
-package com.tzyel.springbaseproject.controller;
+package com.tzyel.springbaseproject.controller.api;
 
 import com.tzyel.springbaseproject.constant.MessageCode;
 import com.tzyel.springbaseproject.exception.SpringBaseProjectException;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("dummy-error")
+@RequestMapping("api/dummy-error")
 public class DummyErrorController {
 
     @PreAuthorize("hasRole('ADMIN_UNKNOWN')")

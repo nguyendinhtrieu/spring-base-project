@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -46,9 +47,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
                                 .requestMatchers(
-                                        "/example/**",
                                         "/health",
-                                        "/auth/login"
+                                        "/api/example/**",
+                                        "/api/auth/login"
                                 ).permitAll()
                                 .requestMatchers(ViewHtmlConst.ANT_MATCHERS_RESOURCES).permitAll()
                                 .anyRequest().authenticated()
@@ -72,6 +73,10 @@ public class SecurityConfig {
                     session.sessionConcurrency(sessionConcurrency ->
                             sessionConcurrency.sessionRegistry(new SessionRegistryImpl()));
                 })
+                .httpBasic(basic -> basic.authenticationEntryPoint(authEntryPoint))
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();

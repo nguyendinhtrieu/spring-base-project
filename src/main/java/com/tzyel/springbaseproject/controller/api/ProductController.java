@@ -1,5 +1,6 @@
-package com.tzyel.springbaseproject.controller;
+package com.tzyel.springbaseproject.controller.api;
 
+import com.tzyel.springbaseproject.controller.BaseController;
 import com.tzyel.springbaseproject.dto.product.CreateProductDto;
 import com.tzyel.springbaseproject.dto.product.ProductDto;
 import com.tzyel.springbaseproject.dto.product.UpdateProductDto;
@@ -21,7 +22,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("product")
+@RequestMapping("api/product")
 public class ProductController extends BaseController {
     private final ProductService productService;
 

@@ -1,10 +1,10 @@
 ### GET /dummy
-GET {{host}}/dummy
+GET {{host}}/api/dummy
 Authorization: Bearer {{member-jwt-token}}
 Accept: application/json
 
 ### POST /dummy
-POST {{host}}/dummy
+POST {{host}}/api/dummy
 Authorization: Bearer {{member-jwt-token}}
 Accept: application/json
 Content-Type: application/json
@@ -18,12 +18,12 @@ Content-Type: application/json
 }
 
 ### GET /dummy/user
-GET {{host}}/dummy/user
+GET {{host}}/api/dummy/user
 Authorization: Bearer {{user-jwt-token}}
 Accept: application/json
 
 ### GET /dummy/admin
-GET {{host}}/dummy/admin
+GET {{host}}/api/dummy/admin
 Authorization: Bearer {{admin-jwt-token}}
 Accept: application/json
 

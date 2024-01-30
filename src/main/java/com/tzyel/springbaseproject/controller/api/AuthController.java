@@ -1,4 +1,4 @@
-package com.tzyel.springbaseproject.controller;
+package com.tzyel.springbaseproject.controller.api;
 
 import com.tzyel.springbaseproject.constant.MessageCode;
 import com.tzyel.springbaseproject.dto.auth.LoginRequestDto;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
-public class AuthController extends BaseController {
+public class AuthController extends ApiBaseController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 

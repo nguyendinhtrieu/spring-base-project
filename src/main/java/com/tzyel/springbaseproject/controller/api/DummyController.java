@@ -1,4 +1,4 @@
-package com.tzyel.springbaseproject.controller;
+package com.tzyel.springbaseproject.controller.api;
 
 import com.tzyel.springbaseproject.dto.DummyReqDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("dummy")
-public class DummyController extends BaseController {
+@RequestMapping("api/dummy")
+public class DummyController extends ApiBaseController {
     @GetMapping
     public String member(Principal principal) {
         return "Member!" + principal;

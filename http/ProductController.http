@@ -1,15 +1,15 @@
 ### SearchProductByKeyword
-GET {{host}}/product?keyword=3
+GET {{host}}/api/product?keyword=3
 Authorization: Bearer {{member-jwt-token}}
 Accept: application/json
 
 ### GetProduct
-GET {{host}}/product/2
+GET {{host}}/api/product/2
 Authorization: Bearer {{member-jwt-token}}
 Accept: application/json
 
 ### CreateProduct
-POST {{host}}/product
+POST {{host}}/api/product
 Authorization: Bearer {{member-jwt-token}}
 Content-Type: application/json
 Accept: application/json
@@ -20,7 +20,7 @@ Accept: application/json
 }
 
 ### updateProduct
-PUT {{host}}/product/5
+PUT {{host}}/api/product/5
 Authorization: Bearer {{member-jwt-token}}
 Content-Type: application/json
 Accept: application/json
@@ -31,6 +31,6 @@ Accept: application/json
 }
 
 ### deleteProduct
-DELETE {{host}}/product/5
+DELETE {{host}}/api/product/5
 Authorization: Bearer {{admin-jwt-token}}
 Accept: application/json

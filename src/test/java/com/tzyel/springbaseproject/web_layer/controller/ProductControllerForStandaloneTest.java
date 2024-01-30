@@ -1,7 +1,7 @@
 package com.tzyel.springbaseproject.web_layer.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.tzyel.springbaseproject.controller.ProductController;
+import com.tzyel.springbaseproject.controller.api.ProductController;
 import com.tzyel.springbaseproject.dto.product.CreateProductDto;
 import com.tzyel.springbaseproject.dto.product.ProductDto;
 import com.tzyel.springbaseproject.dto.product.UpdateProductDto;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProductControllerForStandaloneTest extends ControllerTestBase {
-    private static final String BASE_PATH = "/product";
+    private static final String BASE_PATH = "/api/product";
 
     @Mock
     private ProductService productService;
