@@ -1,13 +1,16 @@
 package com.tzyel.springbaseproject.config;
 
 import com.tzyel.springbaseproject.constant.MessageCode;
+import com.tzyel.springbaseproject.constant.ViewHtmlConst;
 import com.tzyel.springbaseproject.exception.ErrorObject;
 import com.tzyel.springbaseproject.exception.SbpBadRequestException;
 import com.tzyel.springbaseproject.exception.SbpConflictException;
 import com.tzyel.springbaseproject.exception.SbpForbiddenException;
 import com.tzyel.springbaseproject.exception.SbpNotFoundException;
 import com.tzyel.springbaseproject.exception.SpringBaseProjectException;
+import com.tzyel.springbaseproject.utils.ApplicationUtil;
 import com.tzyel.springbaseproject.utils.MessageUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -22,11 +25,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -38,6 +43,10 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
     @SuppressWarnings("NullableProblems")
     @Override
     protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        // TODO: 30/01/2024  
+        if (ApplicationUtil.isWebRequest(request)) {
+            throw new SbpNotFoundException(ex.getMessage(), ex);
+        }
         ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010002);
         return this.handleExceptionInternal(ex, errorObject, headers, status, request);
     }
@@ -45,6 +54,7 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
     @SuppressWarnings("NullableProblems")
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        log.error(ex.getMessage(), ex);
         ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
         Map<String, List<String>> errors = ex.getAllErrors().stream()
                 .collect(Collectors.groupingBy(
@@ -63,48 +73,65 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(SpringBaseProjectException.class)
-    public final ResponseEntity<Object> handleSpringBaseProjectException(SpringBaseProjectException ex) {
-        log.error(ex.getMessage(), ex);
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ErrorObject errorObject = ex.getError();
-
-        if (errorObject == null) {
-            errorObject = new ErrorObject();
-            errorObject.setCode(MessageCode.E0010001);
-            errorObject.setMessage(ex.getMessage());
-        }
-
-        setLogDebug(errorObject, ex.getStackTrace());
-
+    public final Object handleSpringBaseProjectException(SpringBaseProjectException ex, HttpServletRequest request) {
+        HttpStatus status;
         if (ex instanceof SbpNotFoundException) {
             status = HttpStatus.NOT_FOUND;
-        }
-        if (ex instanceof SbpForbiddenException) {
+        } else if (ex instanceof SbpForbiddenException) {
             status = HttpStatus.FORBIDDEN;
-        }
-        if (ex instanceof SbpConflictException) {
+        } else if (ex instanceof SbpConflictException) {
             status = HttpStatus.CONFLICT;
-        }
-        if (ex instanceof SbpBadRequestException) {
+        } else if (ex instanceof SbpBadRequestException) {
             status = HttpStatus.BAD_REQUEST;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<>(errorObject, status);
+
+        return handleErrorResponse(request, status, ex, () -> {
+            ErrorObject errorObject = ex.getError();
+            if (errorObject == null) {
+                errorObject = new ErrorObject();
+                errorObject.setCode(MessageCode.E0010001);
+                errorObject.setMessage(ex.getMessage());
+            }
+
+            setLogDebug(errorObject, ex.getStackTrace());
+
+            return new ResponseEntity<>(errorObject, status);
+        });
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public final ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-        ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010004);
-        return new ResponseEntity<>(errorObject, HttpStatus.FORBIDDEN);
+    public final Object handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return handleErrorResponse(request, status, ex, () -> {
+            ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010004);
+            return new ResponseEntity<>(errorObject, status);
+        });
     }
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleException(Exception ex) {
-        ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010001);
-        return new ResponseEntity<>(errorObject, HttpStatus.INTERNAL_SERVER_ERROR);
+    public final Object handleException(Exception ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return handleErrorResponse(request, status, ex, () -> {
+            ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010001);
+            return new ResponseEntity<>(errorObject, status);
+        });
+    }
+
+    private Object handleErrorResponse(HttpServletRequest request, HttpStatus status, Supplier<Object> handleApiResponse) {
+        if (ApplicationUtil.isWebRequest(request)) {
+            return errorPageView(status);
+        }
+        return handleApiResponse.get();
+    }
+
+    private Object handleErrorResponse(HttpServletRequest request, HttpStatus status, Exception ex, Supplier<Object> handleApiResponse) {
+        log.error(ex.getMessage(), ex);
+        return handleErrorResponse(request, status, handleApiResponse);
     }
 
     private ErrorObject handleExceptionAndGetErrorObject(Exception ex, String messageCode) {
-        log.error(ex.getMessage(), ex);
         ErrorObject errorObject = new ErrorObject();
         errorObject.setCode(messageCode);
         errorObject.setMessage(MessageUtil.getMessage(messageCode));
@@ -117,5 +144,17 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
         if (debug) {
             errorObject.setDebug(stackTraceElements);
         }
+    }
+
+    private Object errorPageView(HttpStatus status) {
+        HttpStatus httpStatus =
+                (status == HttpStatus.NOT_FOUND || status == HttpStatus.FORBIDDEN)
+                        ? status
+                        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("errorCode", httpStatus.value());
+        modelAndView.setViewName(ViewHtmlConst.ERROR);
+        return modelAndView;
     }
 }

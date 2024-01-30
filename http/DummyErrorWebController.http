@@ -1,0 +1,31 @@
+### GET /dummy-error/permission
+GET {{host}}/dummy-error/permission
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GET /dummy-error/400
+GET {{host}}/dummy-error/400
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GET /dummy-error/403
+GET {{host}}/dummy-error/403
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GET /dummy-error/404
+GET {{host}}/dummy-error/404
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GET /dummy-error/409
+GET {{host}}/dummy-error/409
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+### GET /dummy-error/500
+GET {{host}}/dummy-error/500
+Authorization: Bearer {{member-jwt-token}}
+Accept: application/json
+
+###

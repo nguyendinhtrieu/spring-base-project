@@ -2,6 +2,7 @@ package com.tzyel.springbaseproject.config.filter;
 
 import com.tzyel.springbaseproject.service.ApplicationUserDetailsService;
 import com.tzyel.springbaseproject.service.JwtService;
+import com.tzyel.springbaseproject.utils.ApplicationUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (isApiRequest(request)) {
+        if (ApplicationUtil.isApiRequest(request)) {
             // Clear context for authentication from session
             SecurityContextHolder.clearContext();
 
@@ -48,9 +49,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    private boolean isApiRequest(HttpServletRequest request) {
-        return request.getServletPath().startsWith("/api/");
     }
 }
