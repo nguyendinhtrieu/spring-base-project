@@ -14,9 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,9 +22,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
@@ -36,40 +32,41 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 @Slf4j
-public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomizedExceptionHandler {
     @Value("${application.debug:false}")
     private boolean debug;
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        // TODO: 30/01/2024  
-        if (ApplicationUtil.isWebRequest(request)) {
-            throw new SbpNotFoundException(ex.getMessage(), ex);
-        }
-        ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010002);
-        return this.handleExceptionInternal(ex, errorObject, headers, status, request);
+    @ExceptionHandler(NoResourceFoundException.class)
+    public final Object handleNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request) {
+        log.error(ex.getMessage());
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        return handleErrorResponse(request, status, () -> {
+            ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010002);
+            return new ResponseEntity<>(errorObject, status);
+        });
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        log.error(ex.getMessage(), ex);
-        ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
-        Map<String, List<String>> errors = ex.getAllErrors().stream()
-                .collect(Collectors.groupingBy(
-                        error -> ((FieldError) error).getField(),
-                        Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())));
-        errorObject.setDetails(errors);
-        return this.handleExceptionInternal(ex, errorObject, headers, status, request);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public final Object handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleErrorResponse(request, status, ex, () -> {
+            ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
+            Map<String, List<String>> errors = ex.getAllErrors().stream()
+                    .collect(Collectors.groupingBy(
+                            error -> ((FieldError) error).getField(),
+                            Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())));
+            errorObject.setDetails(errors);
+            return new ResponseEntity<>(errorObject, status);
+        });
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        log.error(ex.getMessage(), ex);
-        ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
-        return this.handleExceptionInternal(ex, errorObject, headers, status, request);
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public final Object handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleErrorResponse(request, status, ex, () -> {
+            ErrorObject errorObject = handleExceptionAndGetErrorObject(ex, MessageCode.E0010005);
+            return new ResponseEntity<>(errorObject, status);
+        });
     }
 
     @ExceptionHandler(SpringBaseProjectException.class)
@@ -148,7 +145,7 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
 
     private Object errorPageView(HttpStatus status) {
         HttpStatus httpStatus =
-                (status == HttpStatus.NOT_FOUND || status == HttpStatus.FORBIDDEN)
+                status == HttpStatus.NOT_FOUND || status == HttpStatus.FORBIDDEN
                         ? status
                         : HttpStatus.INTERNAL_SERVER_ERROR;
 
