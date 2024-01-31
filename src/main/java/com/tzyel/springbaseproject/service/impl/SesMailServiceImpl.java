@@ -63,6 +63,7 @@ public class SesMailServiceImpl implements MailService {
         request.setMessage(message);
 
         // TODO: Handle attachmentList
+        log.debug("Avoid unused method parameters such as 'attachmentList' - {}.", attachmentList);
 
         client.sendEmail(request);
     }
